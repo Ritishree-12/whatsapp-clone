@@ -1,8 +1,15 @@
-import React from 'react';
+import React, { useState,useEffect } from 'react';
 import { FaCommentAlt, FaEllipsisV, FaUsers, FaClock, FaComments } from 'react-icons/fa';
 import './Sidebar.css';
+import { auth, db, logout } from "../firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { Link, useNavigate } from "react-router-dom";
 
-const Sidebar = ({ onChatSelect }) => {
+const Sidebar = ({ onChatSelect, onLogout }) => {
+    const [user, loading, error] = useAuthState(auth);
+    const [showLogout, setShowLogout] = useState(false);
+    const navigate=useNavigate()
+
     const chatItems = [
         { name: 'Eztruck Durga', imgSrc: '../../assets/img.jpg', message: 'Hello there!' },
         { name: 'Print Rasulgarh', imgSrc: '../../assets/img2.jpg', message: 'How are you?' },
@@ -12,6 +19,16 @@ const Sidebar = ({ onChatSelect }) => {
         { name: 'Miku', imgSrc: '../../assets/img2.jpg', message: 'Happy Birthday!' }
     ];
 
+    const handleEllipsisClick = () => {
+        setShowLogout(!showLogout);
+    };
+
+    useEffect(() => {
+        if (loading) return;
+        if (!user) return navigate("/");
+        // fetchUserName();
+      }, [user, loading]);
+
     return (
         <div className="sidebar">
             <div className="sidebar-header">
@@ -20,7 +37,12 @@ const Sidebar = ({ onChatSelect }) => {
                 </div>
                 <div className="header-right">
                     <FaCommentAlt className="header-icon" />
-                    <FaEllipsisV className="header-icon" />
+                    <FaEllipsisV className="header-icon" onClick={handleEllipsisClick} />
+                    {showLogout && (
+                        <div className="logout-option" onClick={logout}>
+                            Logout
+                        </div>
+                    )}
                 </div>
             </div>
             <div className="sidebar-search">

@@ -1,25 +1,21 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import Sidebar from './component/Sidebar';
+import ChatWindow from './component/ChatWindow';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const [selectedChat, setSelectedChat] = useState(null);
+
+    const handleChatSelect = (chat) => {
+        setSelectedChat(chat);
+    };
+
+    return (
+        <div className="app">
+            <Sidebar onChatSelect={handleChatSelect} />
+            <ChatWindow selectedChat={selectedChat} />
+        </div>
+    );
 }
 
 export default App;
